@@ -1,30 +1,33 @@
+// Mobile Menu and Navigation Functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Get DOM elements
+    // Get DOM elements with proper error checking
     const menuButton = document.getElementById('menu-button');
     const menuClose = document.getElementById('menu-close');
     const nav = document.querySelector('nav');
     const body = document.body;
     
     // Open mobile menu
-    if (menuButton) {
+    if (menuButton && nav) {
         menuButton.addEventListener('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
             nav.classList.add('open');
-            body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            body.style.overflow = 'hidden';
         });
     }
     
     // Close mobile menu
-    if (menuClose) {
-        menuClose.addEventListener('click', function() {
+    if (menuClose && nav) {
+        menuClose.addEventListener('click', function(e) {
+            e.preventDefault();
             nav.classList.remove('open');
-            body.style.overflow = 'auto'; // Re-enable scrolling
+            body.style.overflow = 'auto';
         });
     }
     
     // Close menu when clicking outside
     document.addEventListener('click', function(e) {
-        if (nav && !nav.contains(e.target) && menuButton && !menuButton.contains(e.target)) {
+        if (nav && menuButton && !nav.contains(e.target) && !menuButton.contains(e.target)) {
             nav.classList.remove('open');
             body.style.overflow = 'auto';
         }
@@ -63,10 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (readMoreBtn) {
         readMoreBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Button is functional - add your navigation logic here
             console.log('Read more button clicked - functional!');
             
-            // Optional: Add visual feedback
+            // Add visual feedback
             const originalText = this.textContent;
             this.textContent = 'Loading...';
             this.disabled = true;
@@ -78,25 +80,95 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Mobile hero image handling for test case 8 (< 1000px)
+    // Mobile hero image handling (< 1000px)
     function handleHeroImage() {
-        const heroImg = document.getElementById('hero-image');
+        const heroImg = document.querySelector('.hero-img img');
         if (heroImg) {
-            const mobileSrc = 'https://placehold.co/600x400/000/fff?text=Mobile+Hero';
-            const desktopSrc = 'https://placehold.co/1200x500/000/fff?text=Hero+Image';
+            // For viewports under 1000px, ensure proper image display
             if (window.innerWidth < 1000) {
-                if (heroImg.src !== mobileSrc) {
-                    heroImg.src = mobileSrc;
-                }
-            } else {
-                if (heroImg.src !== desktopSrc) {
-                    heroImg.src = desktopSrc;
-                }
+                heroImg.style.display = 'block';
+                heroImg.style.width = '100%';
+                heroImg.style.height = '100%';
+                heroImg.style.objectFit = 'cover';
             }
         }
     }
     
-    // Handle responsive images on load and resize
+    // Handle responsive images
     handleHeroImage();
-    window.addEventListener('resize', handleHeroImage);
+    window.addEventListener('resize', debounce(handleHeroImage, 250));
+    
+    // Add smooth scrolling animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe cards for scroll animations
+    document.querySelectorAll('.card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(card);
+    });
+    
+    // Observe news items for animations
+    document.querySelectorAll('.news-item').forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(20px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+    });
+});
+
+// Utility function for debouncing
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Handle smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Add hover effects for news headlines
+document.addEventListener('DOMContentLoaded', function() {
+    const newsHeadlines = document.querySelectorAll('.right-block h3, .card h3');
+    
+    newsHeadlines.forEach(headline => {
+        headline.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+        
+        headline.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
 });
