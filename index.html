@@ -7,34 +7,39 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo-container">
-            <img src="logo.svg" alt="News Agency Logo" class="logo">
-        </div>
-        
-        <div id="menu-button" class="menu-button">
-            <button>☰</button>
-        </div>
-        
-        <nav>
-            <div id="menu-close" class="menu-close">✕</div>
-            <ul class="nav-items">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">New</a></li>
-                <li><a href="#">Popular</a></li>
-                <li><a href="#">Trending</a></li>
-                <li><a href="#">Categories</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="https://placehold.co/100x30/000/fff?text=News" alt="News Agency Logo" class="logo">
+            </div>
+            
+            <div id="menu-button" class="menu-button">
+                <button>☰</button>
+            </div>
+            
+            <nav id="mobile-nav">
+                <div id="menu-close" class="menu-close">✕</div>
+                <ul class="nav-items">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">New</a></li>
+                    <li><a href="#">Popular</a></li>
+                    <li><a href="#">Trending</a></li>
+                    <li><a href="#">Categories</a></li>
+                </ul>
+            </nav>
+        </header>
+
         <main class="main-content">
             <!-- Hero Section -->
             <section class="hero-section">
                 <div class="hero-img">
-                    <img src="hero-desktop.jpg" alt="Web 3.0 Technology" class="hero-image">
+                    <picture>
+                        <!-- Mobile image for viewports < 1000px -->
+                        <source media="(max-width: 999px)" srcset="https://placehold.co/600x400/000/fff?text=Mobile+Hero">
+                        <!-- Desktop image for viewports >= 1000px -->
+                        <img id="hero-image" src="https://placehold.co/1200x500/000/fff?text=Hero+Image" alt="Web 3.0 Technology" class="hero-image">
+                    </picture>
                 </div>
                 <div class="hero-content">
                     <h1 class="main-text">The Bright Future of Web 3.0?</h1>
@@ -49,17 +54,17 @@
             <aside class="right-block">
                 <h2 class="new-title">New</h2>
                 
-                <div class="news1 news-item">
+                <div class="news-item">
                     <h3>Hydrogen VS Electric Cars</h3>
                     <p>Will hydrogen-fueled cars ever catch up to EVs?</p>
                 </div>
                 
-                <div class="news2 news-item">
+                <div class="news-item">
                     <h3>The Downsides of AI Artistry</h3>
                     <p>What are the possible adverse effects of on-demand AI image generation?</p>
                 </div>
                 
-                <div class="news3 news-item">
+                <div class="news-item">
                     <h3>Is VC Funding Drying Up?</h3>
                     <p>Private funding by VC firms is down 50% YOY. We take a look at what that means.</p>
                 </div>
@@ -70,7 +75,7 @@
         <section class="second-section">
             <div class="card">
                 <div class="card-image">
-                    <img src="retro-pc.jpg" alt="Retro PC">
+                    <img src="https://placehold.co/100x120/E8E8EC/5D5F79?text=PC" alt="Retro PC">
                 </div>
                 <div class="card-content">
                     <span class="card-number">01</span>
@@ -81,7 +86,7 @@
             
             <div class="card">
                 <div class="card-image">
-                    <img src="laptop.jpg" alt="Modern Laptop">
+                    <img src="https://placehold.co/100x120/E8E8EC/5D5F79?text=Laptop" alt="Modern Laptop">
                 </div>
                 <div class="card-content">
                     <span class="card-number">02</span>
@@ -92,7 +97,7 @@
             
             <div class="card">
                 <div class="card-image">
-                    <img src="gaming.jpg" alt="Gaming Setup">
+                    <img src="https://placehold.co/100x120/E8E8EC/5D5F79?text=Gaming" alt="Gaming Setup">
                 </div>
                 <div class="card-content">
                     <span class="card-number">03</span>
