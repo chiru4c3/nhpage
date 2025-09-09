@@ -40,11 +40,11 @@ function updateHeroImage() {
     
     if (screenWidth >= 1000) {
         // Desktop view
-        heroImage.src = 'hero-desktop.jpg';
+        heroImage.src = '/images/image-web-3-desktop.jpg';
         heroImage.alt = 'Desktop Hero Image';
     } else {
         // Mobile view
-        heroImage.src = 'hero-mobile.jpg';
+        heroImage.src = '/images/image-web-3-mobile.jpg';
         heroImage.alt = 'Mobile Hero Image';
     }
 }
