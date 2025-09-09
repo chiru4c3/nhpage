@@ -1,147 +1,133 @@
-// Mobile Menu Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Get menu elements
-    const menuButton = document.getElementById('menu-button');
-    const menuClose = document.getElementById('menu-close');
-    const mobileNav = document.querySelector('.mobile-nav');
-    const menuOverlay = document.querySelector('.menu-overlay');
-    const body = document.body;
+// DOM Elements
+const menuButton = document.getElementById('menu-button');
+const menuClose = document.getElementById('menu-close');
+const navMenu = document.getElementById('nav-menu');
+const heroImage = document.getElementById('hero-image');
 
-    // Function to open mobile menu
-    function openMobileMenu() {
-        mobileNav.classList.add('open');
-        menuOverlay.classList.add('active');
-        body.style.overflow = 'hidden'; // Prevent body scroll when menu is open
-    }
+// Mobile menu functionality
+function openMenu() {
+    navMenu.classList.add('open');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+}
 
-    // Function to close mobile menu
-    function closeMobileMenu() {
-        mobileNav.classList.remove('open');
-        menuOverlay.classList.remove('active');
-        body.style.overflow = ''; // Restore body scroll
-    }
+function closeMenu() {
+    navMenu.classList.remove('open');
+    document.body.style.overflow = 'auto'; // Restore scrolling
+}
 
-    // Event listeners
-    if (menuButton) {
-        menuButton.addEventListener('click', openMobileMenu);
-    }
+// Event listeners for menu toggle
+menuButton.addEventListener('click', openMenu);
+menuClose.addEventListener('click', closeMenu);
 
-    if (menuClose) {
-        menuClose.addEventListener('click', closeMobileMenu);
-    }
+// Close menu when clicking on nav links (for better UX)
+const navLinks = document.querySelectorAll('.nav-link');
+navLinks.forEach(link => {
+    link.addEventListener('click', closeMenu);
+});
 
-    if (menuOverlay) {
-        menuOverlay.addEventListener('click', closeMobileMenu);
-    }
-
-    // Close menu when clicking on navigation links (mobile)
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav .nav-link');
-    mobileNavLinks.forEach(link => {
-        link.addEventListener('click', closeMobileMenu);
-    });
-
-    // Handle window resize - close mobile menu if screen becomes large
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            closeMobileMenu();
-        }
-    });
-
-    // Handle escape key to close mobile menu
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && mobileNav.classList.contains('open')) {
-            closeMobileMenu();
-        }
-    });
-
-    // Smooth scrolling for anchor links (if any are added later)
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Add active state handling for navigation items
-    const allNavLinks = document.querySelectorAll('.nav-link');
-    
-    // Set home as active by default
-    const homeLinks = document.querySelectorAll('.nav-link[href="#"], .nav-link:first-child');
-    homeLinks.forEach(link => {
-        link.classList.add('active');
-    });
-
-    // Handle navigation link clicks
-    allNavLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Remove active class from all links
-            allNavLinks.forEach(navLink => {
-                navLink.classList.remove('active');
-            });
-            
-            // Add active class to clicked link and its counterpart (desktop/mobile)
-            const linkText = this.textContent.trim();
-            const matchingLinks = document.querySelectorAll('.nav-link');
-            matchingLinks.forEach(matchingLink => {
-                if (matchingLink.textContent.trim() === linkText) {
-                    matchingLink.classList.add('active');
-                }
-            });
-        });
-    });
-
-    // Add hover effects for read more button (additional enhancement)
-    const readMoreBtn = document.querySelector('.read-more-btn');
-    if (readMoreBtn) {
-        readMoreBtn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-1px)';
-        });
-        
-        readMoreBtn.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    }
-
-    // Add click handlers for news articles (placeholder functionality)
-    const newsArticles = document.querySelectorAll('.right-block article, .card');
-    newsArticles.forEach(article => {
-        article.addEventListener('click', function() {
-            // Add a subtle click effect
-            this.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
-        });
-    });
-
-    // Intersection Observer for animations on scroll (optional enhancement)
-    if ('IntersectionObserver' in window) {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe cards for animation
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
+// Close menu when clicking outside (on overlay)
+document.addEventListener('click', (e) => {
+    if (navMenu.classList.contains('open') && 
+        !navMenu.contains(e.target) && 
+        !menuButton.contains(e.target)) {
+        closeMenu();
     }
 });
+
+// Responsive hero image functionality
+function updateHeroImage() {
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth >= 1000) {
+        // Desktop view
+        heroImage.src = 'hero-desktop.jpg';
+        heroImage.alt = 'Desktop Hero Image';
+    } else {
+        // Mobile view
+        heroImage.src = 'hero-mobile.jpg';
+        heroImage.alt = 'Mobile Hero Image';
+    }
+}
+
+// Update hero image on page load
+document.addEventListener('DOMContentLoaded', updateHeroImage);
+
+// Update hero image on window resize
+window.addEventListener('resize', updateHeroImage);
+
+// Handle window resize for menu
+window.addEventListener('resize', () => {
+    const screenWidth = window.innerWidth;
+    
+    // Close mobile menu if screen becomes desktop size
+    if (screenWidth >= 1000 && navMenu.classList.contains('open')) {
+        closeMenu();
+    }
+});
+
+// Smooth scrolling for anchor links (if needed in future)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Add keyboard navigation support for accessibility
+document.addEventListener('keydown', (e) => {
+    // Close menu with Escape key
+    if (e.key === 'Escape' && navMenu.classList.contains('open')) {
+        closeMenu();
+    }
+    
+    // Open menu with Enter or Space when menu button is focused
+    if ((e.key === 'Enter' || e.key === ' ') && 
+        document.activeElement === menuButton) {
+        e.preventDefault();
+        openMenu();
+    }
+});
+
+// Enhanced button interactions
+const readMoreBtn = document.querySelector('.read-more-btn');
+if (readMoreBtn) {
+    readMoreBtn.addEventListener('click', () => {
+        // Add click functionality if needed
+        console.log('Read More clicked');
+    });
+}
+
+// News item click handlers for better interactivity
+const newsItems = document.querySelectorAll('.news-item h3, .second-section .card h3');
+newsItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // Add click functionality if needed
+        console.log('News item clicked:', item.textContent);
+    });
+});
+
+// Initialize the application
+function initApp() {
+    // Set initial hero image
+    updateHeroImage();
+    
+    // Ensure menu is closed on load
+    navMenu.classList.remove('open');
+    document.body.style.overflow = 'auto';
+    
+    // Add loaded class for any CSS animations
+    document.body.classList.add('loaded');
+}
+
+// Run initialization when DOM is fully loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
